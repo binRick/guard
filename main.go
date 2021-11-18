@@ -34,6 +34,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	v1 "github.com/crosbymichael/guard/api/v1"
@@ -45,6 +46,24 @@ import (
 	"github.com/urfave/cli"
 	"google.golang.org/grpc"
 )
+
+var (
+	DEFAULT_LISTEN_HOST = `127.0.0.1`
+	DEFAULT_LISTEN_PORT = 59224
+
+	DEFAULT_LISTEN_HOST_ENV = os.Getenv(`LISTEN_HOST`)
+	DEFAULT_LISTEN_PORT_ENV = os.Getenv(`LISTEN_PORT`)
+)
+
+func init() {
+	if DEFAULT_LISTEN_HOST_ENV != `` {
+		DEFAULT_LISTEN_HOST = DEFAULT_LISTEN_HOST_ENV
+	}
+	_DEFAULT_LISTEN_PORT_ENV, err := strconv.ParseInt(DEFAULT_LISTEN_PORT_ENV, 10, 0)
+	if err == nil && _DEFAULT_LISTEN_PORT_ENV > 0 && _DEFAULT_LISTEN_PORT_ENV < 65536 {
+		DEFAULT_LISTEN_PORT = int(_DEFAULT_LISTEN_PORT_ENV)
+	}
+}
 
 func main() {
 	app := cli.NewApp()
@@ -59,7 +78,7 @@ func main() {
 		cli.StringFlag{
 			Name:  "address,a",
 			Usage: "grpc address",
-			Value: "127.0.0.1:59224",
+			Value: fmt.Sprintf(`%s:%d`, DEFAULT_LISTEN_HOST, DEFAULT_LISTEN_PORT),
 		},
 		cli.StringFlag{
 			Name:   "sentry-dsn",
