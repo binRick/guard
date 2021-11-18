@@ -2,5 +2,4 @@
 set -euo pipefail
 cd $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-cd ../.
-go build
+./build.sh && ./test.sh && ./install.sh

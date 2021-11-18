@@ -218,7 +218,9 @@ var createCommand = cli.Command{
 }
 
 var listCommand = cli.Command{
-	Name:        "list",
+	Name:    "list",
+	Aliases: []string{"ls"},
+
 	Description: "list all tunnels",
 	Action: func(clix *cli.Context) error {
 		conn, err := grpc.Dial(clix.GlobalString("address"), grpc.WithInsecure())
