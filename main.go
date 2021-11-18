@@ -182,6 +182,7 @@ var serverCommand = cli.Command{
 var createCommand = cli.Command{
 	Name:        "create",
 	Description: "create a new tunnel",
+	Aliases:     []string{"c"},
 	Flags: []cli.Flag{
 		cli.StringFlag{
 			Name:  "address,a",
@@ -218,10 +219,9 @@ var createCommand = cli.Command{
 }
 
 var listCommand = cli.Command{
-	Name:    "list",
-	Aliases: []string{"ls"},
-
-	Description: "list all tunnels",
+	Name:        "list",
+	Aliases:     []string{"ls", "l", "status", "stat", "L", "LIST", "List"},
+	Description: "List Tunnels Configuration",
 	Action: func(clix *cli.Context) error {
 		conn, err := grpc.Dial(clix.GlobalString("address"), grpc.WithInsecure())
 		if err != nil {
