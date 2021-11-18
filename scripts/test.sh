@@ -1,6 +1,6 @@
 #!/bin/bash
-names(){
-  ./guard list | jq '.[].id' -Mrc
+names() {
+	./guard list | jq '.[].id' -Mrc
 }
 
 I=wg599
