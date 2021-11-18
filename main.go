@@ -59,7 +59,7 @@ func main() {
 		cli.StringFlag{
 			Name:  "address,a",
 			Usage: "grpc address",
-			Value: "10.199.199.1:10100",
+			Value: "127.0.0.1:59224",
 		},
 		cli.StringFlag{
 			Name:   "sentry-dsn",
