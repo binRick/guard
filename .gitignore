@@ -2,3 +2,4 @@ guard
 *.swp
 bin
 docker/wireguard/*/tunnel.json
+docker/wireguard/*.conf
