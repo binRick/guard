@@ -12,7 +12,7 @@ services:
      - ./entrypoint.sh:/entrypoint.sh
      - ./wireguard:/etc/wireguard
      - /dev/net/tun:/dev/net/tun
-     - ../../guard/bin/guard-musl:/usr/bin/guard
+     - ../../guard/.musl-bin/guard:/usr/bin/guard
      - ../../guard:/guard
     environment:
      - WG_COLOR_MODE=always
