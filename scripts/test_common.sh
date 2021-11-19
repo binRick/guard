@@ -4,12 +4,11 @@ BASE_DIR="$(cd $(dirname "${BASH_SOURCE[0]}")/../../guard/. && pwd)"
 SCRIPTS_DIR=$BASE_DIR/scripts
 DOCKER_DIR=$BASE_DIR/docker
 
-
 #>&2 ansi --red "BASE_DIR=$BASE_DIR |$DOCKER_DIR|$SCRIPTS_DIR"
 
-exec_script(){
-  cmd="exec ./scripts/$@"
-  eval "$cmd"
+exec_script() {
+	cmd="exec ./scripts/$@"
+	eval "$cmd"
 }
 
 name_exists() {

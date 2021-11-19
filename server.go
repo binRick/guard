@@ -118,8 +118,9 @@ func (s *server) Create(ctx context.Context, r *v1.CreateRequest) (*v1.TunnelRes
 		return nil, err
 	}
 	if err := wgquick(ctx, "enable", t.ID); err != nil {
-		log.WithError(err).Error("enable tunnel")
-		return nil, errors.Wrap(err, "enable tunnel")
+		//		log.WithError(err).Error("enable tunnel")
+		fmt.Printf("enable tunnel error> %s", err)
+		//	return nil, errors.Wrap(err, "enable tunnel")
 	}
 	if err := wgquick(ctx, "start", t.ID); err != nil {
 		log.WithError(err).Error("start tunnel")
