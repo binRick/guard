@@ -1,8 +1,8 @@
-G=./guard
 INTERFACE_PREFIX=wgd
 BASE_DIR="$(cd $(dirname "${BASH_SOURCE[0]}")/../../guard/. && pwd)"
 SCRIPTS_DIR=$BASE_DIR/scripts
 DOCKER_DIR=$BASE_DIR/docker
+G="$SCRIPTS_DIR/docker_guard_exec.sh"
 
 #>&2 ansi --red "BASE_DIR=$BASE_DIR |$DOCKER_DIR|$SCRIPTS_DIR"
 
