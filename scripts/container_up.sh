@@ -4,6 +4,7 @@ cd $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source test_common.sh
 
 cd ../.
+compose=$(command -v podman-compose||command -v docker-compose)
 
 cleanup() ( 
 	(
@@ -16,4 +17,4 @@ cleanup() (
 )
 
 trap cleanup EXIT
-podman-compose -f docker/container-compose.yaml up
+$compose -f docker/container-compose.yaml up

@@ -2,7 +2,7 @@ version: '3.7'
 services:
   wg:
     image: masipcat/wireguard-go:latest
-    rm: yes
+      #    rm: yes
     hostname: wg
     init: no
     working_dir: /scripts
