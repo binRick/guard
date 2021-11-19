@@ -5,7 +5,7 @@ services:
       #    rm: yes
     hostname: wg
     init: no
-    working_dir: /scripts
+    working_dir: /guard/scripts
     sysctls:
      - net.ipv4.ip_forward=1
     volumes:
@@ -13,13 +13,13 @@ services:
      - ./wireguard:/etc/wireguard
      - /dev/net/tun:/dev/net/tun
      - ../../guard/bin/guard-musl:/usr/bin/guard
-     - ../../guard/scripts:/scripts
+     - ../../guard:/guard
     environment:
      - WG_COLOR_MODE=always
      - LOG_LEVEL=debug
      - LISTEN_HOST=127.0.0.1
      - LISTEN_PORT=59222
-     - PATH=/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+     - PATH=/guard/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     ports:
       - 59222:59222/tcp
       - 59300:59300/udp
