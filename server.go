@@ -350,7 +350,7 @@ func wireguardData(ctx context.Context, r io.Reader, args ...string) ([]byte, er
 func wgquick(ctx context.Context, action, name string) error {
 	cmd := exec.CommandContext(ctx, "systemctl", action, fmt.Sprintf("wg-quick@%s", name))
 	out, err := cmd.CombinedOutput()
-	if err != nil {
+	if false && err != nil {
 		return errors.Wrapf(err, "%s", out)
 	}
 	return nil
