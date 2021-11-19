@@ -8,6 +8,7 @@ services:
     sysctls:
      - net.ipv4.ip_forward=1
     volumes:
+     - ../../guard/bin/guard-x86:/guard
      - ./entrypoint.sh:/entrypoint.sh
      - /dev/net/tun:/dev/net/tun
      # Folder with 'publickey', 'privatekey' and 'wg0.conf'
