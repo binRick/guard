@@ -2,25 +2,31 @@ version: '3.7'
 services:
   wg:
     image: masipcat/wireguard-go:latest
-    cap_add:
-     - NET_ADMIN
-     - SYS_MODULE       
+    rm: yes
+    hostname: wg
+    init: no
+    working_dir: /scripts
     sysctls:
      - net.ipv4.ip_forward=1
     volumes:
-     - ../../guard/bin/guard-musl:/usr/bin/guard
      - ./entrypoint.sh:/entrypoint.sh
-     - /dev/net/tun:/dev/net/tun
-     # Folder with 'publickey', 'privatekey' and 'wg0.conf'
      - ./wireguard:/etc/wireguard
+     - /dev/net/tun:/dev/net/tun
+     - ../../guard/bin/guard-musl:/usr/bin/guard
+     - ../../guard/scripts:/scripts
     environment:
      - WG_COLOR_MODE=always
      - LOG_LEVEL=debug
      - LISTEN_HOST=127.0.0.1
      - LISTEN_PORT=59222
+     - PATH=/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     ports:
-      - 41820:41820/udp
-    # Uncomment the following line when 'AllowedIPs' is '0.0.0.0/0'
-    # privileged: true
+      - 59222:59222/tcp
+      - 59300:59300/udp
+      - 59301:59301/udp
+      - 59302:59302/udp
+      - 59303:59303/udp
+      - 59304:59304/udp
+    privileged: true
     restart: always
 
