@@ -1,8 +1,29 @@
 version: '3.7'
 services:
+  compiler:
+    dns_search: 
+      - vpnservice.company
+      - f180.vpnservice.company
+    build:
+      dockerfile: ./../../guard/compiler.Dockerfile
+      args:
+        compiler_mode: musl
+      target: compiler
+    image: compiler
+    hostname: wg
+    init: no
+    working_dir: /guard/scripts
+    command: /entrypoint.sh
+    volumes:
+     - ./compiler.sh:/entrypoint.sh
+     - /dev/net/tun:/dev/net/tun
+     - ../../guard:/guard
+    environment:
+     - PATH=/guard/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    privileged: no
+    restart: always
   wg:
     image: masipcat/wireguard-go:latest
-      #    rm: yes
     hostname: wg
     init: no
     working_dir: /guard/scripts
@@ -27,6 +48,6 @@ services:
       - 59302:59302/udp
       - 59303:59303/udp
       - 59304:59304/udp
-    privileged: true
+    privileged: yes
     restart: always
 
