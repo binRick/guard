@@ -22,6 +22,56 @@ services:
      - PATH=/guard/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     privileged: no
     restart: always
+
+  guard-client-1:
+    command: /entrypoint.sh
+    image: guardclient
+    hostname: guard-client-1
+    init: no
+    working_dir: /guard/scripts
+    sysctls:
+     - net.ipv4.ip_forward=1
+    volumes:
+     - ./guard-client-1-entrypoint.sh:/entrypoint.sh
+     - /dev/net/tun:/dev/net/tun
+     - ../../guard/.musl-bin/guard:/usr/bin/guard
+     - ../../guard:/guard
+    environment:
+     - WG_COLOR_MODE=always
+     - LOG_LEVEL=debug
+     - PATH=/guard/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    privileged: yes
+    restart: always
+
+  guard-server-1:
+    command: /entrypoint.sh
+    image: guardserver
+    hostname: guard-server-1
+    init: no
+    working_dir: /guard/scripts
+    sysctls:
+     - net.ipv4.ip_forward=1
+    volumes:
+     - ./guard-server-1-entrypoint.sh:/entrypoint.sh
+     - /dev/net/tun:/dev/net/tun
+     - ../../guard/.musl-bin/guard:/usr/bin/guard
+     - ../../guard:/guard
+    environment:
+     - WG_COLOR_MODE=always
+     - LOG_LEVEL=debug
+     - LISTEN_HOST=127.0.0.1
+     - LISTEN_PORT=59222
+     - PATH=/guard/scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    ports:
+      - 59222:59222/tcp
+      - 59300:59300/udp
+      - 59301:59301/udp
+      - 59302:59302/udp
+      - 59303:59303/udp
+      - 59304:59304/udp
+    privileged: yes
+    restart: always
+
   wg:
     image: masipcat/wireguard-go:latest
     hostname: wg

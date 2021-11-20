@@ -5,3 +5,4 @@ docker/wireguard/*/tunnel.json
 docker/wireguard/*.conf
 .bin
 .musl-bin
+.configs
