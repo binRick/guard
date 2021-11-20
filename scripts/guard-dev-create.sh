@@ -5,7 +5,7 @@ export PATH=~/guard:$PATH
 source test_common.sh
 cd ../.
 
-IFACE=$(hostname -s)
+IFACE=${1:-$(hostname -s)}
 [[ -d configs ]] || mkdir -p ./.configs
 CFG=./.configs/$IFACE.conf
 
