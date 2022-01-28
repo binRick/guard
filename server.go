@@ -119,12 +119,12 @@ func (s *server) Create(ctx context.Context, r *v1.CreateRequest) (*v1.TunnelRes
 		os.RemoveAll(path)
 		return nil, err
 	}
-	if err := wgquick(ctx, "enable", t.ID); err != nil {
+	if err := wgquick(ctx, "down", t.ID); err != nil {
 		//		log.WithError(err).Error("enable tunnel")
 		fmt.Printf("enable tunnel error> %s", err)
 		//	return nil, errors.Wrap(err, "enable tunnel")
 	}
-	if err := wgquick(ctx, "start", t.ID); err != nil {
+	if err := wgquick(ctx, "up", t.ID); err != nil {
 		log.WithError(err).Error("start tunnel")
 		return nil, errors.Wrap(err, "start tunnel")
 	}
@@ -178,9 +178,13 @@ func (s *server) NewPeer(ctx context.Context, r *v1.NewPeerRequest) (*v1.PeerRes
 		log.WithError(err).Error("save config")
 		return nil, err
 	}
-	if err := wgquick(ctx, "restart", t.ID); err != nil {
-		log.WithError(err).Error("restart config")
-		return nil, errors.Wrap(err, "restart tunnel")
+	if err := wgquick(ctx, "down", t.ID); err != nil {
+		log.WithError(err).Error("down config")
+		return nil, errors.Wrap(err, "down tunnel")
+	}
+	if uerr := wgquick(ctx, "up", t.ID); err != nil {
+		log.WithError(uerr).Error("up config")
+		return nil, errors.Wrap(uerr, "up tunnel")
 	}
 	clearTunnel(t)
 	return &v1.PeerResponse{
@@ -218,9 +222,13 @@ func (s *server) DeletePeer(ctx context.Context, r *v1.DeletePeerRequest) (*v1.T
 	if err := s.saveConf(t); err != nil {
 		return nil, err
 	}
-	if err := wgquick(ctx, "restart", t.ID); err != nil {
-		log.WithError(err).Error("restart config")
-		return nil, errors.Wrap(err, "restart tunnel")
+	if err := wgquick(ctx, "down", t.ID); err != nil {
+		log.WithError(err).Error("down config")
+		return nil, errors.Wrap(err, "down tunnel")
+	}
+	if uerr := wgquick(ctx, "up", t.ID); err != nil {
+		log.WithError(uerr).Error("up config")
+		return nil, errors.Wrap(uerr, "up tunnel")
 	}
 	log.Info("delete peer")
 	clearTunnel(t)
@@ -235,10 +243,6 @@ func (s *server) Delete(ctx context.Context, r *v1.DeleteRequest) (*types.Empty,
 	}
 	log := logrus.WithField("tunnel", r.ID)
 	path := filepath.Join(s.dir, r.ID)
-	if err := wgquick(ctx, "disable", r.ID); err != nil {
-		log.WithError(err).Error("disable tunnel")
-		return nil, errors.Wrap(err, "disable tunnel")
-	}
 	if err := wgquick(ctx, "stop", r.ID); err != nil {
 		log.WithError(err).Error("stop tunnel")
 		return nil, errors.Wrap(err, "stop tunnel")
@@ -350,7 +354,8 @@ func wireguardData(ctx context.Context, r io.Reader, args ...string) ([]byte, er
 }
 
 func wgquick(ctx context.Context, action, name string) error {
-	cmd := exec.CommandContext(ctx, "systemctl", action, fmt.Sprintf("wg-quick@%s", name))
+	//cmd := exec.CommandContext(ctx, "systemctl", action, fmt.Sprintf("wg-quick@%s", name))
+	cmd := exec.CommandContext(ctx, "wg-quick", action, fmt.Sprintf("%s", name))
 	out, err := cmd.CombinedOutput()
 	if false && err != nil {
 		return errors.Wrapf(err, "%s", out)
