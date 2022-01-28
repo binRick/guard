@@ -323,7 +323,7 @@ var peersCommand = cli.Command{
 					},
 				}
 				tc := t.Render(os.Stdout)
-				fmt.Fprintf(os.Stderr,"%s\n", tc)
+				fmt.Fprintf(os.Stderr, "%s\n", tc)
 				return tc
 			},
 		},

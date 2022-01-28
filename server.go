@@ -68,6 +68,7 @@ func newServer(dir string) (*server, error) {
 type server struct {
 	dir string
 }
+
 var MASQ = true
 
 func (s *server) Create(ctx context.Context, r *v1.CreateRequest) (*v1.TunnelResponse, error) {
@@ -108,7 +109,7 @@ func (s *server) Create(ctx context.Context, r *v1.CreateRequest) (*v1.TunnelRes
 		PrivateKey: key,
 		PublicKey:  pub,
 		Endpoint:   host,
-    //Masquerade: MASQ,
+		//Masquerade: MASQ,
 	}
 	if err := s.saveTunnel(&t); err != nil {
 		log.WithError(err).Error("save tunnel")
@@ -353,12 +354,31 @@ func wireguardData(ctx context.Context, r io.Reader, args ...string) ([]byte, er
 	return cmd.CombinedOutput()
 }
 
+var SYSTEMD_ENABLED = false
+
 func wgquick(ctx context.Context, action, name string) error {
-	//cmd := exec.CommandContext(ctx, "systemctl", action, fmt.Sprintf("wg-quick@%s", name))
-	cmd := exec.CommandContext(ctx, "wg-quick", action, fmt.Sprintf("%s", name))
-	out, err := cmd.CombinedOutput()
-	if false && err != nil {
-		return errors.Wrapf(err, "%s", out)
+	MODE := `wg-quick`
+  OUT := ``
+	if SYSTEMD_ENABLED {
+		MODE = `systemd`
+		if action == `down` {
+			action = `stop`
+		}
+		cmd := exec.CommandContext(ctx, "systemctl", action, fmt.Sprintf("wg-quick@%s", name))
+		out, err := cmd.CombinedOutput()
+		if false && err != nil {
+			return errors.Wrapf(err, "%s", out)
+		}
+    OUT = fmt.Sprintf(`%s`,out)
+	} else {
+		cmd := exec.CommandContext(ctx, "wg-quick", action, fmt.Sprintf("%s", name))
+		out, err := cmd.CombinedOutput()
+		if false && err != nil {
+			return errors.Wrapf(err, "%s", out)
+		}
+    OUT = fmt.Sprintf(`%s`,out)
 	}
+	msg := fmt.Sprintf(`wg-quick> %s > %s`, MODE, OUT)
+	fmt.Fprintf(os.Stderr, "%s\n", msg)
 	return nil
 }
