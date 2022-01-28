@@ -322,7 +322,9 @@ var peersCommand = cli.Command{
 						},
 					},
 				}
-				return t.Render(os.Stdout)
+				tc := t.Render(os.Stdout)
+				fmt.Fprintf(os.Stderr,"%s\n", tc)
+				return tc
 			},
 		},
 		{
