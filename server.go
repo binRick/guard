@@ -68,6 +68,7 @@ func newServer(dir string) (*server, error) {
 type server struct {
 	dir string
 }
+var MASQ = true
 
 func (s *server) Create(ctx context.Context, r *v1.CreateRequest) (*v1.TunnelResponse, error) {
 	if r.ID == "" {
@@ -107,6 +108,7 @@ func (s *server) Create(ctx context.Context, r *v1.CreateRequest) (*v1.TunnelRes
 		PrivateKey: key,
 		PublicKey:  pub,
 		Endpoint:   host,
+    //Masquerade: MASQ,
 	}
 	if err := s.saveTunnel(&t); err != nil {
 		log.WithError(err).Error("save tunnel")

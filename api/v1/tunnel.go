@@ -57,6 +57,7 @@ AllowedIPs = {{joinIPs $peer.AllowedIPs}}
 func (t *Tunnel) Render(w io.Writer) error {
 	tmp, err := template.New("wireguard").Funcs(template.FuncMap{
 		"joinIPs": joinIPs,
+    "Masquerade": true,
 	}).Parse(confFmt)
 	if err != nil {
 		return errors.Wrap(err, "parse template")
